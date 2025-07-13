@@ -13,9 +13,7 @@ function RoutesApp() {
     return (
         <BrowserRouter>
             <NavBar />
-            {/* Definimos las rutas de nuestra aplicacion */}
             <Routes>
-                {/* Ruta inicial de carga (Home Page) */}
                 <Route path="/" element={<HomePage />} />
                 <Route path='/login' element={<LoginPage />} />
                 <Route path='/register' element={<RegisterPage />} />

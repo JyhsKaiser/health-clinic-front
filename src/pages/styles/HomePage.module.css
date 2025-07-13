@@ -1,20 +1,21 @@
 .container {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Dos columnas de igual tamaño */
   align-items: center;
-  justify-content: center;
-  min-height: 80vh; /* Ocupa al menos el 80% del alto de la ventana */
-  text-align: center;
-  padding: 20px;
-  background-color: #f8f9fa; /* Un fondo gris claro para la sección */
+  width: 70%;
+  margin: 0 auto; /* Centra el contenedor en la página */
+  min-height: 80vh;
   color: #343a40; /* Color de texto oscuro para contraste */
-  font-family: "Arial", sans-serif; /* Fuente genérica amigable */
+}
+.panel_text {
+  width: 100%;
+  padding: 20px;
 }
 
 .container h1 {
   color: #0056b3; /* Un azul institucional para el título */
-  margin-bottom: 20px;
-  font-size: 2.5em; /* Tamaño de fuente más grande para el título */
+  margin-bottom: 40px;
+  font-size: 5em; /* Tamaño de fuente más grande para el título */
   font-weight: bold;
 }
 
@@ -23,15 +24,34 @@
   line-height: 1.6; /* Espaciado entre líneas para mejor legibilidad */
   margin-bottom: 10px;
   max-width: 700px; /* Limita el ancho de los párrafos para que no sean demasiado largos en pantallas grandes */
+  width: 100%;
+  /* margin: 0 auto;  */
+}
+
+/* .row {
+  width: 100%;
+} */
+.image {
+  width: 400px;
+  height: auto;
 }
 
 /* Opcional: Media queries para responsividad en pantallas más pequeñas */
 @media (max-width: 768px) {
+  .container {
+    grid-template-columns: 1fr; /* Una sola columna en pantallas pequeñas */
+    width: 100%;
+    /* margin: 20px; */
+    box-sizing: border-box;
+  }
   .container h1 {
+    text-align: center;
+    margin-bottom: 20px;
     font-size: 2em;
   }
 
   .container p {
     font-size: 1em;
+    text-align: justify;
   }
 }
