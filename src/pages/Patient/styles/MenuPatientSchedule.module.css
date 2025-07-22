@@ -1,0 +1,41 @@
+.title {
+  text-align: center;
+  font-size: 2rem;
+  color: #0056b3;
+  margin-bottom: 40px;
+  /* width: 100%; */
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  /* justify-content: space-between; */
+}
+
+.formikContainer {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+
+  justify-content: center;
+  width: 60%;
+  height: 90vh;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+@media screen and (max-width: 768px) {
+  .formikContainer {
+    margin-top: 40px;
+    width: 90%;
+    height: auto;
+  }
+
+  .title {
+    text-align: left;
+    font-size: 1.5rem;
+    gap: 10px;
+  }
+}

@@ -1,43 +1,54 @@
 import styles from './styles/HomePage.module.css';
+import NavbarHome from '../components/NavBarComp.jsx';
+
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Image from 'react-bootstrap/Image';
-import picHome1 from '../assets/picHome1.jpg';
-import picHome2 from '../assets/picHome2.jpg';
-import picHome3 from '../assets/picHome3.jpg';
+import Card from 'react-bootstrap/Card';
+
+import picHome1 from './assets/Home/picHome1.jpg';
+import picHome2 from './assets/Home/picHome2.jpg';
+import picHome3 from './assets/Home/picHome3.jpg';
+
 
 const HomePage = () => {
     return (
-        <div className={styles.container}>
-            <div className={styles.panel_text}>
-                <h1>Medical and Clinical Center</h1>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit ratione aperiam suscipit magni nihil. Qui voluptas quos quidem asperiores. Voluptates adipisci, molestias voluptas similique, fuga est nemo quis magnam quibusdam voluptatum explicabo nam accusantium doloribus eligendi illo! Magnam, a cupiditate magni dicta aut id quae sunt culpa delectus temporibus consectetur quod quidem quia, atque tempore nemo, sequi debitis. Atque quod molestias eaque est minus numquam? Totam ullam voluptatem accusantium nostrum quod possimus beatae rem. Nulla odio voluptate harum quam, totam itaque architecto cumque ducimus sed facere vitae exercitationem, ut quod optio. Officia alias in neque ut, debitis dolores labore aperiam!</p>
-            </div>
-            <div>
-                <Container>
-                    <Row className={styles.row}>
-                        <Col md={4}>
-                            <Image src={picHome1} roundedCircle className={styles.image} />
-                        </Col>
+        <>
+            <NavbarHome />
+            <div className={styles.container}>
+                <div className="d-flex justify-content-around">
+                    <Card className={styles.card}>
+                        <Card.Body className={styles.panel_body}>
+                            <Card.Title className={styles.panel_title}>Medical and Clinical Center</Card.Title>
+                            <Card.Text className={styles.panel_text}>
+                                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Distinctio dolores soluta vel, labore eveniet natus autem sint expedita! Deserunt magni dolor tempore totam recusandae aperiam nulla, ab molestiae tenetur ipsa, vitae at aspernatur distinctio voluptate odit fugit? Error ea explicabo nesciunt ullam, nihil deserunt temporibus distinctio soluta, cupiditate veritatis mollitia accusamus omnis! Veniam sit corporis ratione explicabo expedita cumque asperiores. Temporibus eligendi necessitatibus quaerat aliquid. A numquam molestias quidem? Aliquam est explicabo harum reiciendis ducimus tempore eveniet perferendis optio non! Id saepe accusamus voluptate tempora, consequuntur obcaecati laborum dolor magni minima sed, quis, perspiciatis omnis ullam! Repellat hic beatae ea!
+                            </Card.Text>
+                        </Card.Body>
+                    </Card>
+                </div>
+                <div className={styles.imageContainer}>
+                    <Container>
+                        <Row className={styles.row}>
+                            <Col md={{ offset: 0 }}>
+                                <Image src={picHome1} roundedCircle className={styles.image} />
+                            </Col>
 
-                    </Row>
-                    <Row>
-                        <Col md={{ span: 6, offset: 6 }}>
-                            <Image src={picHome2} roundedCircle className={styles.image} />
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col md={4}>
-                            <Image src={picHome3} roundedCircle className={styles.image} />
-                        </Col>
-                    </Row>
-                </Container>
-            </div>
-
-
-
-        </div>
+                        </Row>
+                        <Row>
+                            <Col md={{ offset: 5 }}>
+                                <Image src={picHome2} roundedCircle className={styles.image} />
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col md={{ offset: 0 }}>
+                                <Image src={picHome3} roundedCircle className={styles.image} />
+                            </Col>
+                        </Row>
+                    </Container>
+                </div>
+            </div >
+        </>
     );
 }
 

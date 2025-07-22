@@ -2,56 +2,76 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr); /* Dos columnas de igual tamaño */
   align-items: center;
-  width: 70%;
+  width: 80%;
   margin: 0 auto; /* Centra el contenedor en la página */
-  min-height: 80vh;
+  min-height: 100vh;
   color: #343a40; /* Color de texto oscuro para contraste */
+
+  /* height: auto; */
+}
+.card {
+  width: 100%;
+  border: none; /* Elimina el borde de la tarjeta */
 }
 .panel_text {
   width: 100%;
   padding: 20px;
 }
 
-.container h1 {
+.panel_title {
   color: #0056b3; /* Un azul institucional para el título */
-  margin-bottom: 40px;
-  font-size: 5em; /* Tamaño de fuente más grande para el título */
+  margin-bottom: 20px;
+  font-size: 4vw; /* Tamaño de fuente más grande para el título */
   font-weight: bold;
+  padding: 20px;
 }
 
 .container p {
   font-size: 1.1em;
   line-height: 1.6; /* Espaciado entre líneas para mejor legibilidad */
   margin-bottom: 10px;
-  max-width: 700px; /* Limita el ancho de los párrafos para que no sean demasiado largos en pantallas grandes */
   width: 100%;
-  /* margin: 0 auto;  */
 }
 
-/* .row {
-  width: 100%;
-} */
 .image {
   width: 400px;
+  /* width: 60%; */
   height: auto;
+}
+.imageContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px; /* Espacio entre la tarjeta y la imagen */
 }
 
 /* Opcional: Media queries para responsividad en pantallas más pequeñas */
-@media (max-width: 768px) {
+@media (max-width: 1200px) {
   .container {
     grid-template-columns: 1fr; /* Una sola columna en pantallas pequeñas */
     width: 100%;
-    /* margin: 20px; */
-    box-sizing: border-box;
+    /* margin-top: 60px; */
   }
-  .container h1 {
+  .panel_title {
+    color: #0056b3; /* Un azul institucional para el título */
+    margin: 20px 0 20px 0;
+    font-size: 2.2em;
     text-align: center;
-    margin-bottom: 20px;
-    font-size: 2em;
+    font-weight: bold;
+    padding: 0px;
   }
-
+  .panel_body {
+    padding: 0px;
+  }
   .container p {
     font-size: 1em;
     text-align: justify;
+  }
+  .imageContainer {
+    margin: 0 auto;
+  }
+  .image {
+    width: 370px;
+    height: auto;
   }
 }

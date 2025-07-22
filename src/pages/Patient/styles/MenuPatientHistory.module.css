@@ -1,0 +1,57 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 200px;
+  width: 100%;
+}
+.searchContainer {
+  width: 75%;
+  display: flex;
+
+  gap: 20px;
+  margin-bottom: 20px;
+}
+.inputDate {
+  width: 100%;
+}
+.tableContainer {
+  display: flex;
+  justify-content: center;
+
+  /* align-items: center; */
+  /* margin-top: 200px; */
+  width: 100%;
+}
+.table {
+  width: 75%;
+}
+
+/* Media query para pantallas pequeñas (ej. menos de 768px - típicas de móvil) */
+@media (max-width: 767.98px) {
+  .table td,
+  .table th {
+    padding: 0.1rem; /* O ajustar según necesites para reducir el espacio */
+    font-size: 0.875rem; /* Fuente un poco más pequeña en móviles */
+  }
+  .searchContainer {
+    width: 90%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
+}
+
+/* Media query para pantallas medianas (ej. entre 768px y 991.98px - típicas de tablet) */
+@media (max-width: 1050px) {
+  /* Puedes añadir estilos para hacer las celdas más compactas si es necesario */
+  .table td,
+  .table th {
+    padding: 0.5rem; /* O ajustar según necesites para reducir el espacio */
+    font-size: 0.875rem; /* Fuente un poco más pequeña en móviles */
+  }
+  .table {
+    width: 90%;
+  }
+}
