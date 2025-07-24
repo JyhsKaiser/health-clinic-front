@@ -62,7 +62,20 @@ const Registerpage = () => {
 
                         </Row>
                     </Container>
-                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <Form.Group className={`mb-3 `} controlId="formBasicEmail">
+                        <Row xs={1} md={2} lg={2} >
+
+                            <Col className={` ${styles.col} `}>
+                                <Form.Label >Name</Form.Label>
+                                <Form.Control type="text" placeholder="Enter your name" className={styles.name} />
+                            </Col>
+                            <Col className={` ${styles.col}`}>
+                                <Form.Label >Last Name</Form.Label>
+                                <Form.Control type="text" placeholder="Enter your last name" className={styles.name} />
+                            </Col>
+                        </Row>
+                    </Form.Group>
+                    <Form.Group className="mb-3 " controlId="formBasicEmail">
                         <Form.Label>Email address</Form.Label>
                         <Form.Control type="email" placeholder="Enter email" />
                         <Form.Text className="text-muted">
