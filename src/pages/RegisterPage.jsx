@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Eliminamos useLocation si no se usa
+
 
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
@@ -12,11 +14,27 @@ import styles from './styles/RegisterPage.module.css';
 import picLogin from './assets/Register/picLogin.png';
 import MyVerticallyCenteredModal from '../components/MyVerticallyCenteredModal';
 import NavbarHome from '../components/NavBarComp.jsx';
+import AuthService from '../api/services/AuthService.js'; // Asegúrate de que la ruta sea correcta
 
 const Registerpage = () => {
+    const navigate = useNavigate();
 
+    // --- 1. Estados para los campos del formulario (Inputs Controlados) ---
+    const [name, setName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+
+    // --- 2. Estados para la UI y Feedback al Usuario ---
     const [modalShow, setModalShow] = useState(false);
-    const [isChecked, setIsChecked] = useState(false); // Nuevo estado para el checkbox
+    const [isChecked, setIsChecked] = useState(false); // Estado para el checkbox de política de privacidad
+    const [loading, setLoading] = useState(false); // Estado para indicar carga (petición en curso)
+    const [formErrors, setFormErrors] = useState({}); // Estado para errores de validación del cliente
+    const [apiError, setApiError] = useState(''); // Estado para errores devueltos por la API
+    const [successMessage, setSuccessMessage] = useState(''); // Estado para mensaje de éxito
+
+
 
     // Función para manejar el "Are you agree?" en el modal
     const handleAgree = () => {
@@ -37,22 +55,116 @@ const Registerpage = () => {
             setIsChecked(false); // Desmarca si se desmarca manualmente
         }
     };
+    // --- 5. Función de Validación del Formulario (Cliente) ---
+    const validateForm = () => {
+        const errors = {};
+        if (!name.trim()) errors.name = 'El nombre es obligatorio.';
+        if (!lastName.trim()) errors.lastName = 'El apellido es obligatorio.';
+        if (!email.trim()) errors.email = 'El correo electrónico es obligatorio.';
+        else if (!/\S+@\S+\.\S+/.test(email)) errors.email = 'El formato del correo electrónico es inválido.'; // Validación de formato de email
+        if (!password) errors.password = 'La contraseña es obligatoria.';
+        else if (password.length < 6) errors.password = 'La contraseña debe tener al menos 6 caracteres.'; // Mínimo 6 caracteres
+        if (password !== confirmPassword) errors.confirmPassword = 'Las contraseñas no coinciden.';
+        if (!isChecked) errors.terms = 'Debes aceptar la política de privacidad.'; // Validar checkbox
 
-    const sendRequest = (e) => {
-        e.preventDefault(); // Previene el envío del formulario por defecto
-        if (!isChecked) {
-            setModalShow(true); // Abre el modal si el checkbox no está marcado
-        } else {
-            // Aquí puedes manejar el envío del formulario, por ejemplo, hacer una petición a la API
-            console.log("Formulario enviado");
+        setFormErrors(errors); // Actualiza el estado de errores
+        return Object.keys(errors).length === 0; // Retorna true si no hay errores
+    };
+
+    // const submit = async (e) => {
+    //     e.preventDefault(); // Previene el envío del formulario por defecto
+    //     const name = e.target.elements.name.value; // Usa el controlId como name
+    //     const lastName = e.target.elements.lastName.value; // Usa el controlId como lastName
+    //     const email = e.target.elements.email.value; // Usa el controlId como email
+    //     const password = e.target.elements.password.value; // Usa el controlId como password
+    //     const confirmPassword = e.target.elements.passwordConfirm.value; // Usa el controlId como confirmPassword
+    //     // Evita el envío del formulario por defecto
+
+
+    //     if (!isChecked) {
+    //         setModalShow(true); // Abre el modal si el checkbox no está marcado
+    //     } else {
+
+
+    //         if (password !== confirmPassword) {
+    //             console.error('Las contraseñas no coinciden');
+    //             // Aquí deberías integrar un sistema de notificación o modal para mostrar el error al usuario.
+    //             // Por ejemplo: showCustomAlert('Error', 'Las contraseñas no coinciden');
+    //             return;
+    //         }
+    //         const response = await AuthService.register({ name, lastName, email, password });
+
+    //         if (response.success) {
+    //             console.log('Registro exitoso:', response.data);
+    //             // Redirige al usuario a la página de inicio de sesión o donde desees
+    //             navigate('/menupatient/schedule'); // Redirige a la página de inicio de sesión
+    //         } else {
+    //             console.error('Error al registrar usuario:', response.error);
+    //             // Aquí deberías integrar un sistema de notificación o modal para mostrar el error al usuario.
+    //             // Por ejemplo: showCustomAlert('Error de registro', response.error);
+    //         }
+    //         // Aquí puedes manejar el envío del formulario, por ejemplo, hacer una petición a la API
+    //         console.log("Formulario enviado");
+    //     }
+    // };
+
+    // --- 6. Función de Envío del Formulario (handleSubmit) ---
+    const handleSubmit = async (e) => {
+        e.preventDefault(); // Previene el envío del formulario por defecto del navegador
+
+        setApiError(''); // Limpia errores de API anteriores
+        setSuccessMessage(''); // Limpia mensajes de éxito anteriores
+        setFormErrors({}); // Limpia errores de validación anteriores
+
+        // Realiza la validación del cliente
+        if (!validateForm()) {
+            return; // Detiene el envío si la validación falla
         }
-    }
+
+        setLoading(true); // Activa el estado de carga
+
+        try {
+            // Llama a tu servicio de autenticación para registrar al usuario
+            const result = await AuthService.register({
+                name,
+                lastName,
+                email,
+                password,
+                // Asegúrate de que tu backend no necesite 'confirmPassword'
+                // Si tu backend necesita el rol, agrégalo aquí (ej. role: 'PATIENT')
+            });
+
+            if (result.success) {
+                setSuccessMessage(result.message || '¡Registro exitoso! Ahora puedes iniciar sesión.');
+                // Opcional: Limpiar el formulario después del éxito
+                setName('');
+                setLastName('');
+                setEmail('');
+                setPassword('');
+                setConfirmPassword('');
+                setIsChecked(false);
+                // Redirigir al usuario a la página de login después de un breve retraso
+                setTimeout(() => {
+                    navigate('/login'); // Asegúrate de tener react-router-dom configurado
+                }, 2000); // Redirige después de 2 segundos
+            } else {
+                // Muestra el error devuelto por la API
+                setApiError(result.error || 'El registro falló. Por favor, inténtalo de nuevo.');
+            }
+        } catch (error) {
+            console.error('Error de API en el registro:', error);
+            // Muestra un mensaje de error genérico si hay un error inesperado de red/API
+            setApiError('Ocurrió un error inesperado durante el registro. Por favor, verifica tu conexión.');
+        } finally {
+            setLoading(false); // Desactiva el estado de carga
+        }
+    };
 
     return (
         <>
             <NavbarHome />
             <div className={styles.container}>
-                <Form className={styles.form}>
+                <Form className={styles.form} onSubmit={handleSubmit}>
                     <Container className={styles.imageContainer}>
                         <Row>
 
@@ -62,34 +174,82 @@ const Registerpage = () => {
 
                         </Row>
                     </Container>
-                    <Form.Group className={`mb-3 `} controlId="formBasicEmail">
+                    {/* --- Campos del Formulario (con Inputs Controlados y Validación) --- */}
+                    <Form.Group className={`mb-3`} controlId="nameId">
                         <Row xs={1} md={2} lg={2} >
-
                             <Col className={` ${styles.col} `}>
                                 <Form.Label >Name</Form.Label>
-                                <Form.Control type="text" placeholder="Enter your name" className={styles.name} />
+                                <Form.Control
+                                    type="text"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                    placeholder="Enter your name"
+                                    className={styles.name}
+                                    controlId="name"
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                    {formErrors.name}
+                                </Form.Control.Feedback>
                             </Col>
                             <Col className={` ${styles.col}`}>
                                 <Form.Label >Last Name</Form.Label>
-                                <Form.Control type="text" placeholder="Enter your last name" className={styles.name} />
+                                <Form.Control
+                                    type="text"
+                                    value={lastName}
+                                    onChange={(e) => setLastName(e.target.value)}
+                                    placeholder="Enter your last name"
+                                    className={styles.name}
+                                    controlId="lastName"
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                    {formErrors.lastName}
+                                </Form.Control.Feedback>
                             </Col>
                         </Row>
                     </Form.Group>
-                    <Form.Group className="mb-3 " controlId="formBasicEmail">
+
+                    <Form.Group className="mb-3 " controlId="email">
                         <Form.Label>Email address</Form.Label>
-                        <Form.Control type="email" placeholder="Enter email" />
+                        <Form.Control
+                            type="email"
+                            placeholder="Enter email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            isInvalid={!!formErrors.email}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                            {formErrors.email}
+                        </Form.Control.Feedback>
                         <Form.Text className="text-muted">
                             We'll never share your email with anyone else.
                         </Form.Text>
                     </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="formBasicPassword">
+                    <Form.Group className="mb-3" controlId="password">
                         <Form.Label>Password</Form.Label>
-                        <Form.Control type="password" placeholder="Password" />
+                        <Form.Control
+                            type="password"
+                            placeholder="Password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            isInvalid={!!formErrors.password}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                            {formErrors.password}
+                        </Form.Control.Feedback>
                     </Form.Group>
-                    <Form.Group className="mb-3" controlId="formBasicPasswordConfirm">
+                    <Form.Group className="mb-3" controlId="passwordConfirm">
                         <Form.Label>Confirm your password</Form.Label>
-                        <Form.Control type="password" placeholder="Password" />
+                        <Form.Control
+                            type="password"
+                            placeholder="Confirm Password"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            isInvalid={!!formErrors.confirmPassword}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                            {formErrors.confirmPassword}
+                        </Form.Control.Feedback>
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="formBasicCheckbox">
@@ -98,17 +258,29 @@ const Registerpage = () => {
                             label="By registering, you accept our privacy policy."
                             checked={isChecked} // Controla el estado del checkbox
                             onChange={handleCheckboxChange} // Nuevo manejador para el checkbox
+                            isInvalid={!!formErrors.terms} // Muestra error si no está marcado
+
                         />
+                        <Form.Control.Feedback type="invalid">
+                            {formErrors.terms}
+                        </Form.Control.Feedback>
+
                     </Form.Group>
 
-
+                    {/* --- Mensajes de Error y Éxito --- */}
+                    {apiError && <p style={{ color: 'red' }} className="mt-3">{apiError}</p>}
+                    {successMessage && <p style={{ color: 'green' }} className="mt-3">{successMessage}</p>}
 
                     <Button
                         variant="primary"
+                        type='submit'
                         className={styles.submitButton}
-                        onClick={sendRequest}
+                        disabled={loading} // Deshabilita el botón durante la carga
+
                     >
-                        Submit
+                        {/* Submit */}
+                        {loading ? 'Registering...' : 'Register'}
+
                     </Button>
 
                     <MyVerticallyCenteredModal
@@ -118,7 +290,7 @@ const Registerpage = () => {
                         onCancel={handleCancel} // Pasa la función para "Cancel"
                     />
                 </Form>
-            </div>
+            </div >
         </>
     );
 }
