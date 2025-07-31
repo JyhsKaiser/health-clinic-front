@@ -5,15 +5,29 @@
 
 import ApiClient from '../ApiClient';
 import {
+    PATIENT_ENDPOINTS,
     USER_ENDPOINTS,
-    TODOS_ENDPOINTS,
-    PRODUCT_ENDPOINTS,
-    ORDER_ENDPOINTS,
-    UPLOAD_ENDPOINTS
-} from '../endpoints';
+
+    // UPLOAD_ENDPOINTS
+} from '../endpoints.js';
 
 class ApiService {
 
+    // ============ PATIENT SERVICES ============
+    async getPatientData(patientId) {
+        try {
+            const response = await ApiClient.get(PATIENT_ENDPOINTS.GET_BY_ID(patientId));
+            return {
+                success: true,
+                data: response.data,
+            };
+        } catch (error) {
+            return {
+                success: false,
+                error: error.response?.data?.message || 'Error al obtener datos del paciente',
+            };
+        }
+    }
 
     // ============ SERVICIOS DE USUARIOS ============
 
@@ -243,33 +257,33 @@ class ApiService {
 
     // ============ SERVICIOS DE UPLOAD ============
 
-    async uploadSingleFile(file, onUploadProgress) {
-        try {
-            const formData = new FormData();
-            formData.append('file', {
-                uri: file.uri,
-                type: file.type,
-                name: file.name,
-            });
+    // async uploadSingleFile(file, onUploadProgress) {
+    //     try {
+    //         const formData = new FormData();
+    //         formData.append('file', {
+    //             uri: file.uri,
+    //             type: file.type,
+    //             name: file.name,
+    //         });
 
-            const response = await ApiClient.uploadFile(
-                UPLOAD_ENDPOINTS.SINGLE_FILE,
-                formData,
-                onUploadProgress
-            );
+    //         const response = await ApiClient.uploadFile(
+    //             UPLOAD_ENDPOINTS.SINGLE_FILE,
+    //             formData,
+    //             onUploadProgress
+    //         );
 
-            return {
-                success: true,
-                data: response.data,
-                message: 'Archivo subido exitosamente',
-            };
-        } catch (error) {
-            return {
-                success: false,
-                error: error.response?.data?.message || 'Error al subir archivo',
-            };
-        }
-    }
+    //         return {
+    //             success: true,
+    //             data: response.data,
+    //             message: 'Archivo subido exitosamente',
+    //         };
+    //     } catch (error) {
+    //         return {
+    //             success: false,
+    //             error: error.response?.data?.message || 'Error al subir archivo',
+    //         };
+    //     }
+    // }
 
     // ============ UTILIDADES GENERALES ============
 

@@ -43,7 +43,8 @@ const LoginPage = () => {
 
             // Verifica si el inicio de sesión fue exitoso
             if (result.success) {
-                console.log('Inicio de sesión exitoso. Datos de usuario:', result.user);
+                // console.log('Id del paciente:', result.data.patientId);
+                // console.log('Inicio de sesión exitoso. Datos de usuario:', result.user);
                 // Redirige al usuario a la ruta deseada después del login exitoso
                 // En este caso, '/menupatient/schedule'
                 navigate('/menupatient/schedule');

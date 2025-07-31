@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
@@ -10,6 +11,23 @@ import Button from 'react-bootstrap/esm/Button.js';
 import NavbarPatient from './NavBarPatient.jsx';
 import styles from './styles/PatientProfileComp.module.css';
 const PatientProfileComp = () => {
+
+    const [patientData, setPatientData] = useState({}); // Estado para los datos del paciente
+
+    useEffect(() => {
+        // Aquí puedes hacer la llamada a la API para obtener los datos del paciente
+        const fetchPatientData = async () => {
+            try {
+                const data = await AuthService.getPatientData();
+                setPatientData(data);
+            } catch (error) {
+                console.error('Error al obtener los datos del paciente:', error);
+            }
+        };
+
+        fetchPatientData();
+    }, []);
+
 
     return (
         <>

@@ -12,6 +12,8 @@ import * as yup from 'yup';
 
 import NavbarPatient from '../../components/NavBarPatient.jsx';
 import styles from './styles/MenuPatientSchedule.module.css';
+import ApiService from '../../api/services/ApiService.js';
+
 
 // --- Datos simulados (sustituir por tus llamadas a API/DB) ---
 const medicosPorEspecialidad = {
@@ -42,6 +44,13 @@ const MenuPatientSchedule = () => {
     const [loadingHours, setLoadingHours] = useState(false);
     const [medicsForSelectedSpecialty, setMedicsForSelectedSpecialty] = useState([]);
     const [loadingMedics, setLoadingMedics] = useState(false);
+
+    const [patientData, setPatientData] = useState({
+        id: '',
+        name: '',
+        lastName: '',
+        email: '',
+    });
 
     const schema = yup.object().shape({
         specialty: yup.string()
@@ -110,11 +119,29 @@ const MenuPatientSchedule = () => {
 
     // --- Lógica para generar y filtrar horas ---
     useEffect(() => {
+
+        const fetchPatientData = async () => {
+            const patientId = localStorage.getItem('patientId');
+            const patientData = await ApiService.getPatientData(patientId); // Aqui traemos TODOS los datos de nuestro paciente
+            localStorage.setItem('email', patientData.data.email);
+            const patientName = patientData.data.name + ' ' + patientData.data.lastName;
+            // console.log('Nombre del paciente:', patientName);
+            localStorage.setItem('patientName', patientName);
+
+            setPatientData({
+                id: patientData.data.id,
+                name: patientData.data.name,
+                lastName: patientData.data.lastName,
+                email: patientData.data.email,
+            });
+        };
+
         // Función para obtener horas disponibles basada en la fecha seleccionada
         // Simula una llamada a API/BD
         const fetchAvailableHours = async (selectedDate) => {
             setLoadingHours(true);
             // Simula un retardo de red
+            // const response = await ApiClient.
             await new Promise(resolve => setTimeout(resolve, 500));
 
             const allPossibleHours = [];
@@ -147,6 +174,7 @@ const MenuPatientSchedule = () => {
         // (inicialmente se puede llamar con una fecha predeterminada o vacía)
         // Para este ejemplo, lo haremos en el onChange del campo de fecha de Formik
         // y lo pasaremos al useEffect.
+        fetchPatientData();
     }, []); // El useEffect se ejecutará solo una vez al montar,
     // pero la función `fetchAvailableHours` será llamada desde Formik.
 

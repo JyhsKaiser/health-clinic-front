@@ -45,6 +45,10 @@
   color: #0056b3 !important;
   display: inline-block;
 }
+.iconLogout {
+  /* color: #0056b3; */
+  padding: 0px 10px 0px 10px;
+}
 
 @media screen and (max-width: 575px) {
   .link.active {

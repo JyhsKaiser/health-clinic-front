@@ -71,43 +71,6 @@ const Registerpage = () => {
         return Object.keys(errors).length === 0; // Retorna true si no hay errores
     };
 
-    // const submit = async (e) => {
-    //     e.preventDefault(); // Previene el envío del formulario por defecto
-    //     const name = e.target.elements.name.value; // Usa el controlId como name
-    //     const lastName = e.target.elements.lastName.value; // Usa el controlId como lastName
-    //     const email = e.target.elements.email.value; // Usa el controlId como email
-    //     const password = e.target.elements.password.value; // Usa el controlId como password
-    //     const confirmPassword = e.target.elements.passwordConfirm.value; // Usa el controlId como confirmPassword
-    //     // Evita el envío del formulario por defecto
-
-
-    //     if (!isChecked) {
-    //         setModalShow(true); // Abre el modal si el checkbox no está marcado
-    //     } else {
-
-
-    //         if (password !== confirmPassword) {
-    //             console.error('Las contraseñas no coinciden');
-    //             // Aquí deberías integrar un sistema de notificación o modal para mostrar el error al usuario.
-    //             // Por ejemplo: showCustomAlert('Error', 'Las contraseñas no coinciden');
-    //             return;
-    //         }
-    //         const response = await AuthService.register({ name, lastName, email, password });
-
-    //         if (response.success) {
-    //             console.log('Registro exitoso:', response.data);
-    //             // Redirige al usuario a la página de inicio de sesión o donde desees
-    //             navigate('/menupatient/schedule'); // Redirige a la página de inicio de sesión
-    //         } else {
-    //             console.error('Error al registrar usuario:', response.error);
-    //             // Aquí deberías integrar un sistema de notificación o modal para mostrar el error al usuario.
-    //             // Por ejemplo: showCustomAlert('Error de registro', response.error);
-    //         }
-    //         // Aquí puedes manejar el envío del formulario, por ejemplo, hacer una petición a la API
-    //         console.log("Formulario enviado");
-    //     }
-    // };
-
     // --- 6. Función de Envío del Formulario (handleSubmit) ---
     const handleSubmit = async (e) => {
         e.preventDefault(); // Previene el envío del formulario por defecto del navegador
@@ -175,7 +138,7 @@ const Registerpage = () => {
                         </Row>
                     </Container>
                     {/* --- Campos del Formulario (con Inputs Controlados y Validación) --- */}
-                    <Form.Group className={`mb-3`} controlId="nameId">
+                    <Form.Group className={`mb-3`} >
                         <Row xs={1} md={2} lg={2} >
                             <Col className={` ${styles.col} `}>
                                 <Form.Label >Name</Form.Label>
@@ -185,7 +148,6 @@ const Registerpage = () => {
                                     onChange={(e) => setName(e.target.value)}
                                     placeholder="Enter your name"
                                     className={styles.name}
-                                    controlId="name"
                                 />
                                 <Form.Control.Feedback type="invalid">
                                     {formErrors.name}
@@ -199,7 +161,6 @@ const Registerpage = () => {
                                     onChange={(e) => setLastName(e.target.value)}
                                     placeholder="Enter your last name"
                                     className={styles.name}
-                                    controlId="lastName"
                                 />
                                 <Form.Control.Feedback type="invalid">
                                     {formErrors.lastName}

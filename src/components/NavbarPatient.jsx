@@ -7,11 +7,14 @@ import { FaUserAlt } from "react-icons/fa";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { NavLink, useLocation } from 'react-router-dom';
+import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 
 
 import style from './styles/NavbarPatient.module.css';
+import AuthService from '../api/services/AuthService.js'; // Asegúrate de que la ruta sea correcta
 
 function NavbarPatient() {
+
     // Obtener la ubicación actual para aplicar la clase activa
     const location = useLocation();
     const isActive = (path) => location.pathname === path ? style.active : '';
@@ -19,6 +22,11 @@ function NavbarPatient() {
     // Por ejemplo, si quieres aplicar una clase activa a los enlaces:
     const isActiveSchedule = isActive('/menupatient/schedule');
     const isActiveHistory = isActive('/menupatient/medicalhistory');
+
+    const logout = () => {
+        AuthService.logout();
+    }
+
     return (
         <div className={style.navbar}>
             <Navbar expand="lg" className="bg-body-tertiary ">
@@ -56,7 +64,7 @@ function NavbarPatient() {
                             <FontAwesomeIcon icon={faUser} className={style.iconUser} />
                             <NavDropdown
                                 id="nav-dropdown-dark-example"
-                                title="Jovani H. Sánchez"
+                                title={`${localStorage.getItem('patientName')} `}
                                 menuVariant="dark"
                                 className={style.dropdown}
                             >
@@ -64,8 +72,11 @@ function NavbarPatient() {
 
                                 <NavDropdown.Item
                                     as={NavLink}
-                                    to="/">
+                                    to="/"
+                                    onClick={logout}
+                                >
                                     Log out
+                                    <FontAwesomeIcon icon={faSignOutAlt} className={style.iconLogout} />
                                 </NavDropdown.Item>
 
                                 <NavDropdown.Divider />

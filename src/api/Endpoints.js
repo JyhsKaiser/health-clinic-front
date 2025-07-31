@@ -7,10 +7,16 @@ const API_VERSION = '/api/v1';
 
 // URLs base por módulo
 const BASE_URLS = {
+    PATIENT: `${API_VERSION}/patient`,
     AUTH: `/auth`,
     USERS: `/users`,
     // TODOS: `/todos`,
     UPLOADS: `/uploads`,
+};
+
+// Patients Endpoints
+export const PATIENT_ENDPOINTS = {
+    GET_BY_ID: (patientId) => `${BASE_URLS.PATIENT}?id=${patientId}`,
 };
 
 // Endpoints de autenticación

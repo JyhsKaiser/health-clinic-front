@@ -13,6 +13,13 @@ import picHome3 from './assets/Home/picHome3.jpg';
 
 
 const HomePage = () => {
+    // console.log('Datos del localStorage:', {
+    //     authToken: localStorage.getItem('authToken'),
+    //     patientId: localStorage.getItem('patientId'),
+    //     currentUser: localStorage.getItem('currentUser'),
+    //     patientName: localStorage.getItem('patientName'),
+    // });
+
     return (
         <>
             <NavbarHome />

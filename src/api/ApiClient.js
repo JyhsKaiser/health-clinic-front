@@ -54,10 +54,10 @@ class ApiClient {
                 }
 
                 // Logging para debug
-                console.log(`🚀 ${config.method?.toUpperCase()} ${config.url}`, {
-                    params: config.params,
-                    data: config.data,
-                });
+                // console.log(`🚀 ${config.method?.toUpperCase()} ${config.url}`, {
+                //     params: config.params,
+                //     data: config.data,
+                // });
 
                 return config;
             },

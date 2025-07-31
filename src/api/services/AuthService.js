@@ -38,19 +38,19 @@ class AuthService {
 
             const { token } = response.data;
 
-            console.log('Datos de respuesta del login:', response.data);
+            // console.log('Datos de respuesta del login:', response.data);
 
-            let username = null;
+            let email = null;
             let currentUserData = {};
 
             if (token) {
                 const decodedToken = decodeJwt(token);
-                console.log('Token decodificado:', decodedToken);
+                // console.log('Token decodificado:', decodedToken);
 
                 if (decodedToken && decodedToken.sub) {
-                    username = decodedToken.sub;
+                    email = decodedToken.sub;
                     currentUserData = {
-                        username: username,
+                        email: email,
                     };
                 }
             }
@@ -58,15 +58,18 @@ class AuthService {
             // --- CAMBIO CLAVE AQUÍ: Usamos localStorage en lugar de AsyncStorage ---
             if (token) {
                 localStorage.setItem('authToken', token);
+                localStorage.setItem('patientId', response.data.patientId);
+
+                // console.log('id del paciente guardado en localStorage:', response.data.patientId);
             }
             if (response.data.refreshToken) {
                 localStorage.setItem('refreshToken', response.data.refreshToken);
             }
             // Importante: Si currentUserData es un objeto, debes serializarlo a JSON
-            localStorage.setItem('currentUser', JSON.stringify(currentUserData));
+            // localStorage.setItem('currentUser', JSON.stringify(currentUserData));
 
 
-            console.log('Login exitoso. Usuario :', username);
+            console.log('Login exitoso. Email :', email);
 
             return {
                 success: true,
@@ -106,9 +109,10 @@ class AuthService {
         try {
             // --- CAMBIO CLAVE AQUÍ: Usamos localStorage.removeItem ---
             localStorage.removeItem('authToken');
-            localStorage.removeItem('refreshToken');
-            localStorage.removeItem('currentUser'); // Eliminar los datos del usuario
-
+            // localStorage.removeItem('refreshToken');
+            localStorage.removeItem('patientId'); // Eliminar los datos del usuario
+            localStorage.removeItem('email'); // Eliminar los datos del usuario
+            localStorage.removeItem('patientName'); // Eliminar los datos del usuario
             return {
                 success: true,
                 message: 'Sesión cerrada exitosamente',
