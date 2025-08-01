@@ -60,7 +60,7 @@ class AuthService {
                 localStorage.setItem('authToken', token);
                 localStorage.setItem('patientId', response.data.patientId);
 
-                // console.log('id del paciente guardado en localStorage:', response.data.patientId);
+                console.log('id del paciente guardado en localStorage:', localStorage.getItem('patientId'));
             }
             if (response.data.refreshToken) {
                 localStorage.setItem('refreshToken', response.data.refreshToken);

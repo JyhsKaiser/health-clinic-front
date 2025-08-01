@@ -25,7 +25,7 @@ const PatientProfileComp = () => {
             }
         };
 
-        fetchPatientData();
+        // fetchPatientData();
     }, []);
 
 

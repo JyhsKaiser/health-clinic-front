@@ -71,7 +71,7 @@ class ApiClient {
         this.client.interceptors.response.use(
             (response) => {
                 // Logging para debug
-                // console.log(`✅ ${response.status} ${response.config.url}`, response.data);
+                console.log(`✅ ${response.status} ${response.config.url}`, response.data);
                 // console.log(`✅ ${response.status} ${response.config.url}`);
 
                 return response;
