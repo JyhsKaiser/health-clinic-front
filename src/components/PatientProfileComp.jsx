@@ -10,6 +10,8 @@ import Button from 'react-bootstrap/esm/Button.js';
 
 import NavbarPatient from './NavBarPatient.jsx';
 import styles from './styles/PatientProfileComp.module.css';
+import ApiService from '../api/services/ApiService.js';
+
 const PatientProfileComp = () => {
 
     const [patientData, setPatientData] = useState({}); // Estado para los datos del paciente
@@ -18,16 +20,18 @@ const PatientProfileComp = () => {
         // Aquí puedes hacer la llamada a la API para obtener los datos del paciente
         const fetchPatientData = async () => {
             try {
-                const data = await AuthService.getPatientData();
+                const patientId = localStorage.getItem('patientId');
+                const data = await ApiService.getPatientData(patientId);
                 setPatientData(data);
             } catch (error) {
                 console.error('Error al obtener los datos del paciente:', error);
             }
         };
 
-        // fetchPatientData();
-    }, []);
+        fetchPatientData();
+    }, []); // El array vacío asegura que solo se ejecute una vez al montar el componente
 
+    console.log('Nombre del paciente con useState:', patientData.data.name);
 
     return (
         <>

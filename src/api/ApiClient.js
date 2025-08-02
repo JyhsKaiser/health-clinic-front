@@ -4,8 +4,6 @@
 // Configuración central del cliente HTTP (axios)
 
 import axios from 'axios';
-// import AsyncStorage from '@react-native-async-storage/async-storage'; // Ya no es necesario para web
-// import { Alert } from 'react-native'; // Ya no es necesario para web
 
 /**
  * Función para simular un Alert en un entorno web.
@@ -15,16 +13,13 @@ import axios from 'axios';
 const showCustomAlert = (title, message) => {
     console.error(`ALERTA: ${title} - ${message}`);
     // Aquí es donde integrarías un componente de modal o notificación (ej. de una librería UI como Shadcn/UI, Material-UI, o uno personalizado).
-    // Ejemplo:
-    // import { showNotification } from './path/to/notificationService';
-    // showNotification({ type: 'error', title, message });
 };
 
 class ApiClient {
     /**
      * ApiClient es una clase que encapsula la configuración de axios
      * y maneja las peticiones HTTP, incluyendo interceptores para
-     * autenticación, manejo de errores y logging.
+     * autenticación (ahora manejada por cookies HttpOnly), manejo de errores y logging.
      */
     constructor() {
         // Configuración base
@@ -34,6 +29,7 @@ class ApiClient {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
             },
+            withCredentials: true, // ¡IMPORTANTE! Esto permite que Axios envíe y reciba cookies
             timeout: 10000,
         });
         this.setupInterceptors();
@@ -43,17 +39,11 @@ class ApiClient {
         // INTERCEPTOR DE REQUEST - Se ejecuta antes de enviar la petición
         this.client.interceptors.request.use(
             async (config) => {
-                // Agregar token de autenticación automáticamente
-                // Usamos localStorage para web en lugar de AsyncStorage
-                const token = localStorage.getItem('authToken');
+                // *** CAMBIO CLAVE AQUÍ: Ya no necesitamos leer el token de localStorage ***
+                // El navegador enviará automáticamente la cookie 'jwt' HttpOnly
+                // si la petición es al mismo dominio y cumple con las políticas de origen.
 
-                // console.log('Token de autenticación:', token);
-                // Si hay un token, lo agregamos a los headers
-                if (token) {
-                    config.headers.Authorization = `Bearer ${token}`;
-                }
-
-                // Logging para debug
+                // Logging para debug (opcional)
                 // console.log(`🚀 ${config.method?.toUpperCase()} ${config.url}`, {
                 //     params: config.params,
                 //     data: config.data,
@@ -71,8 +61,7 @@ class ApiClient {
         this.client.interceptors.response.use(
             (response) => {
                 // Logging para debug
-                console.log(`✅ ${response.status} ${response.config.url}`, response.data);
-                // console.log(`✅ ${response.status} ${response.config.url}`);
+                // console.log(`✅ ${response.status} ${response.config.url}`, response.data);
 
                 return response;
             },
@@ -81,7 +70,7 @@ class ApiClient {
 
                 // Manejo de errores específicos
                 if (error.response?.status === 401) {
-                    // Token expirado o inválido
+                    // Token expirado o inválido (el backend debería manejar esto si la cookie no es válida)
                     await this.handleUnauthorized();
                 } else if (error.response?.status === 403) {
                     // Sin permisos
@@ -100,17 +89,21 @@ class ApiClient {
     }
 
     async handleUnauthorized() {
-        // Limpiar datos de sesión usando localStorage.removeItem para web
-        localStorage.removeItem('authToken');
-        localStorage.removeItem('currentUser');
-        localStorage.removeItem('refreshToken');
+        // *** CAMBIO CLAVE AQUÍ: Ya no necesitamos remover 'authToken' de localStorage ***
+        // El token no se almacena en localStorage.
+        // Si el backend invalida la sesión (ej. al hacer logout),
+        // puede enviar una cookie 'jwt' con maxAge=0 para eliminarla.
+        localStorage.removeItem('currentUser'); // Esto sí lo puedes mantener si lo usas para datos del usuario
+        localStorage.removeItem('refreshToken'); // Si usas refresh tokens, su manejo sería diferente
 
-        // Aquí podrías navegar al login. En React, esto se haría con un router (ej. react-router-dom)
-        // Ejemplo: window.location.href = '/login'; o usar un hook de navegación si estás en un componente
+        // Aquí podrías navegar al login.
+
         showCustomAlert('Sesión expirada', 'Por favor inicia sesión nuevamente');
+        // Ejemplo de redirección:
+        window.location.href = '/login';
     }
 
-    // Métodos HTTP principales
+    // Métodos HTTP principales (sin cambios)
     async get(url, params = {}, config = {}) {
         return this.client.get(url, { params, ...config });
     }
@@ -131,7 +124,7 @@ class ApiClient {
         return this.client.delete(url, config);
     }
 
-    // Método para upload de archivos
+    // Método para upload de archivos (sin cambios)
     async uploadFile(url, formData, onUploadProgress) {
         return this.client.post(url, formData, {
             headers: {
@@ -141,7 +134,7 @@ class ApiClient {
         });
     }
 
-    // Método para descargar archivos
+    // Método para descargar archivos (sin cambios)
     async downloadFile(url, config = {}) {
         return this.client.get(url, {
             responseType: 'blob',
