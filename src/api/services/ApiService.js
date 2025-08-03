@@ -29,6 +29,23 @@ class ApiService {
         }
     }
 
+    async patchPatientData(patientData) {
+        try {
+            const response = await ApiClient.patch(PATIENT_ENDPOINTS.PATCH_DATA, patientData);
+
+            return {
+                success: true,
+                data: response.data,
+                message: 'Datos del paciente actualizados exitosamente',
+            };
+        } catch (error) {
+            return {
+                success: false,
+                error: error.response?.data?.message || 'Error al actualizar datos del paciente',
+            };
+        }
+    }
+
     // ============ SERVICIOS DE USUARIOS ============
 
     async getUserProfile(username) {

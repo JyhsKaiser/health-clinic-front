@@ -51,6 +51,7 @@ const PatientProfileComp = () => {
                     setPatientData(response.data);
                     // 6. Usamos los datos de la API para inicializar el estado del formulario
                     setFormData({
+                        patientId: patientId,
                         name: response.data.name || '',
                         lastName: response.data.lastName || '',
                         email: response.data.email || '',
@@ -145,10 +146,10 @@ const PatientProfileComp = () => {
 
             // Actualiza el estado enabled en formData antes de guardar
             const updatedFormData = { ...formData, enabled: true };
-            // setFormData(updatedFormData);
 
-            console.log('Datos del paciente a actualizar:', updatedFormData);
-            // await ApiService.updatePatientData(patientId, updatedFormData);
+            // const patientId = localStorage.getItem('patientId');
+            // console.log('Datos del paciente a actualizar:', updatedFormData);
+            await ApiService.patchPatientData(updatedFormData);
 
             setIsEditing(false);
             setIsEditingOnce(false);

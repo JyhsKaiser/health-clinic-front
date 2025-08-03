@@ -17,6 +17,7 @@ const BASE_URLS = {
 // Patients Endpoints
 export const PATIENT_ENDPOINTS = {
     GET_BY_ID: (patientId) => `${BASE_URLS.PATIENT}?id=${patientId}`,
+    PATCH_DATA: `${BASE_URLS.PATIENT}`,
 };
 
 // Endpoints de autenticación
