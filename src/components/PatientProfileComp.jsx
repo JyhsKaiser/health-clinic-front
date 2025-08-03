@@ -12,6 +12,10 @@ import * as yup from 'yup';
 import NavbarPatient from './NavBarPatient.jsx';
 import styles from './styles/PatientProfileComp.module.css';
 import ApiService from '../api/services/ApiService.js';
+import MyVerticallyCenteredModal from '../components/MyVerticallyCenteredModal.jsx';
+
+
+
 
 const PatientProfileComp = () => {
 
@@ -38,49 +42,43 @@ const PatientProfileComp = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [isEditingOnce, setIsEditingOnce] = useState(false);
     const [errors, setErrors] = useState({}); // Nuevo estado para los errores de validación
+    const [modalShow, setModalShow] = useState(false);
+
 
     // 4. useEffect para cargar los datos y poblar el formulario
-    useEffect(() => {
-        const fetchPatientData = async () => {
-            try {
-                const patientId = localStorage.getItem('patientId');
-                const response = await ApiService.getPatientData(patientId);
+    const fetchPatientData = async () => {
+        try {
+            const patientId = localStorage.getItem('patientId');
+            const response = await ApiService.getPatientData(patientId);
 
-                // 5. Verificamos que la respuesta sea válida
-                if (response && response.data) {
-                    setPatientData(response.data);
-                    // 6. Usamos los datos de la API para inicializar el estado del formulario
-                    setFormData({
-                        patientId: patientId,
-                        name: response.data.name || '',
-                        lastName: response.data.lastName || '',
-                        email: response.data.email || '',
-                        bloodType: response.data.bloodType || '',
-                        phone: response.data.phone || '',
-                        address: response.data.address || '',
-                        gender: response.data.gender || '',
-                        weight: response.data.weight || '',
-                        age: response.data.age || '',
-                        height: response.data.height || '',
-                        enabled: response.data.enabled !== undefined ? response.data.enabled : false,
-                    });
-                }
-            } catch (error) {
-                console.error('Error al obtener los datos del paciente:', error);
+            // 5. Verificamos que la respuesta sea válida
+            if (response && response.data) {
+                setPatientData(response.data);
+                // 6. Usamos los datos de la API para inicializar el estado del formulario
+                setFormData({
+                    patientId: patientId,
+                    name: response.data.name || '',
+                    lastName: response.data.lastName || '',
+                    email: response.data.email || '',
+                    bloodType: response.data.bloodType || '',
+                    phone: response.data.phone || '',
+                    address: response.data.address || '',
+                    gender: response.data.gender || '',
+                    weight: response.data.weight || '',
+                    age: response.data.age || '',
+                    height: response.data.height || '',
+                    enabled: response.data.enabled !== undefined ? response.data.enabled : false,
+                });
             }
-        };
+        } catch (error) {
+            console.error('Error al obtener los datos del paciente:', error);
+        }
+    };
 
+    useEffect(() => {
         fetchPatientData();
-    }, []);
+    }, [isEditing]);
 
-    // 7. Manejador de cambios para actualizar el estado del formulario
-    // const handleInputChange = (e) => {
-    //     const { name, value } = e.target;
-    //     setFormData(prevData => ({
-    //         ...prevData,
-    //         [name]: value,
-    //     }));
-    // };
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         // Limpiamos el error del campo actual al escribir
@@ -104,10 +102,19 @@ const PatientProfileComp = () => {
         }
         if (isEditing) {
             setErrors({});
+        } else {
+            fetchPatientData();
         }
+
     };
 
+    const handleCancel = () => {
+        setModalShow(false); // Cierra el modal
+    };
 
+    const handleModalShow = () => {
+        setModalShow(true);
+    };
 
     // Si los datos del paciente aún se están cargando
     if (!patientData) {
@@ -153,6 +160,7 @@ const PatientProfileComp = () => {
 
             setIsEditing(false);
             setIsEditingOnce(false);
+            setModalShow(false);
         } catch (error) {
             if (error instanceof yup.ValidationError) {
                 const newErrors = {};
@@ -365,17 +373,27 @@ const PatientProfileComp = () => {
 
                 <div className={styles.buttons}>
                     <Button variant="primary" className={`mb-3 ${styles.button}`} onClick={handleEditProfile}>
-                        Edit Profile
+                        {isEditing ? 'Cancel' : 'Edit Profile'}
                     </Button>
 
 
-                    <Button variant="success" className={`mb-3 ${styles.button}`} disabled={!isEditing} onClick={handleSaveProfile}>
+                    <Button variant="success" className={`mb-3 ${styles.button}`} disabled={!isEditing} onClick={handleModalShow}>
                         Save Profile
                     </Button>
 
                 </div>
 
             </Container >
+
+            <MyVerticallyCenteredModal
+                show={modalShow}
+                onHide={() => setModalShow(false)} // Permite cerrar el modal con el botón de cerrar (x) o haciendo clic fuera
+                onSubmit={handleSaveProfile}   // Pasa la función para "Are you sure?"
+                onCancel={handleCancel} // Pasa la función para "Cancel"
+                title="Are you sure?"
+                subtitle="Please confirm your action."
+                text="Are you sure you want to save these changes? This action cannot be undone."
+            />
         </>
     );
 }
